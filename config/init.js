@@ -1,7 +1,7 @@
-const cors = require('cors');
+// const cors = require('cors');
 const bodyParser = require('body-parser');
 
-const routes=require("../app/routes/routes");
+const routes=require("../app/routes");
 
 const configureServer = app => {
   app.set('port', (process.env.PORT));
