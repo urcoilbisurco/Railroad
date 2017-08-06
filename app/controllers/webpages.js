@@ -4,19 +4,19 @@ const mailer=require("../utils/mailer");
 const controller={
   send:(req,res)=>{
     res.json({url:req.params.url})
-    readability.read(req.params.url).then(article=>{
+    readability.process(req.params.url).then(result=>{
+      console.log("HERE", result)
       mailer.sendEmail({
-        subject:article.title,
-        html:article.content,
+        subject:result.article.title,
+        html:result.article.content,
         attachments:[
           {
-            filename:article.title+".html",
-            content:article.content
+            path:result.path
           }
         ]
       })
     })
-  },
+  }
 }
 
 
