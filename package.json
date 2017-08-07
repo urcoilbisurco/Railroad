@@ -27,6 +27,7 @@
     "morgan": "^1.8.2",
     "nodemailer": "^4.0.1",
     "read-art": "^0.5.4",
-    "valid-url": "^1.0.9"
+    "valid-url": "^1.0.9",
+    "website-scraper": "^3.1.0"
   }
 }

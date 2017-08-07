@@ -5,31 +5,34 @@ const fs = require('fs');
 const fsPath = require('fs-path');
 const kindlegen = require('./kindlegen');
 const template= body=>{
-  return "<html><head><meta charset='UTF-8'><meta name='cover' content='https://www.w3schools.com/css/trolltunga.jpg'></head><body>"+body+"</body></html>"
+  return "<html><head><meta charset='UTF-8'></head><body>"+body+"</body></html>"
 }
-const folder=appRoot+"/tmp/articles/"
+//const folder=appRoot+"/tmp/articles/"
 const createName= (title, format="html") =>{
   return title.split(" ").join("_")+"."+format
 }
 var m={
-  saveArticle:function(article){
+  saveArticle:function(folder, article){
     return new Promise((resolve, reject)=>{
-      let path=folder+createName(article.title)
+      let path=folder+"/"+createName(article.title)
       fsPath.writeFile(path, template(article.content), (err) => {
         if(err) { return console.log(err);}
         resolve(path)
       })
     })
   },
-  process:function(url){
+  process:function(opts){
+    console.log("process", opts.folderPath)
     return new Promise((resolve, reject)=>{
-      m.read(url).then(article=>{
+      m.read(opts.text).then(article=>{
+        console.log("ARTICLE?", article)
         //save html file to path, then call kindlegen
-        m.saveArticle(article).then(path=>{
+        m.saveArticle(opts.folderPath, article).then(path=>{
           console.log("path:", path)
           console.log("..:>", fs.readFileSync(path))
           kindlegen(fs.readFileSync(path), (error, mobi) => {
-            let path=folder+createName(article.title, "mobi")
+            let path=opts.folderPath+"/"+createName(article.title, "mobi")
+            console.log("PAAAATH", path)
             fsPath.writeFile(path, mobi, (err)=>{
               resolve({ path, article})
             })
@@ -38,16 +41,14 @@ var m={
       })
     })
   },
-  read:function(url){
+  read:function(html){
     return new Promise((resolve, reject)=>{
-
-      read({
-        uri:url,
-        imgFallback: true
-      }, (err, art, options, resp)=>{
+      console.log("html", html)
+      read(html, (err, art, options, resp)=>{
         if(err){
           return reject({error:err})
         }
+        console.log(err, art, options,resp)
         var title = art.title,      // title of article
             content = art.content,  // content of article
             html = art.html;        // whole original innerHTML

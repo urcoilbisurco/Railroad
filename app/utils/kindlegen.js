@@ -20,7 +20,6 @@ module.exports = function(input, callback){
         return callback(error);
       }
       try {
-        console.log("path" , path.resolve(__dirname, 'bin/kindlegen'))
         kindlegen = spawn(path.resolve(appRoot, 'bin/kindlegen'), ['input.html', '-c2', '-verbose', '-o', 'output.mobi'], {
           cwd: tempDir,
           env: {}
@@ -34,7 +33,6 @@ module.exports = function(input, callback){
         if (code !== 0 && code !== 1) {
           return callback(new Error("kindlegen returned error " + code));
         }
-        console.log("here?")
         return fs.readFile(outputPath, function(error, mobi){
           if (error) {
             return callback(error);
